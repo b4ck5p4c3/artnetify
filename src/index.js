@@ -55,3 +55,10 @@ artnet.attachChannel(5, value => {
   mqtt.publish('modbus/endpointint/set/green_traffic', (value > 128) ? '1' : '0');
 
 });
+
+artnet.attachChannel(6, value => {
+
+  debug('(ch6) red space light: %d', value);
+  mqtt.publish('modbus/endpointint/set/red_space_light', (value > 128) ? '1' : '0');
+
+});
