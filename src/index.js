@@ -18,20 +18,21 @@ const mqtt = MQTT.connect(process.env.MQTT_URI, mqttOptions);
 mqtt.on('connect', () => debug('mqtt connected'));
 mqtt.on('error', (err) => debug('mqtt failed: %O', err));
 
+const binaryOutputReducerBuffer = new Map();
+const binaryOutputReducer = (channel, value, topic, on = 'on', off = 'off') => {
+  const state = value > 128;
+  if (binaryOutputReducerBuffer.get(channel) === state) { return; }
+  binaryOutputReducerBuffer.set(channel, state);
+  mqtt.publish(topic, state ? on : off);
+};
+
 /**
  * 1-2 Small traffic light
  * CH1 - RED
  * CH2 - GREEN
  */
-artnet.attachChannel(1, (value) => {
-  debug('(ch1) small traffic light red: %d', value);
-  mqtt.publish('bus/devices/traffic-light/red', (value > 128) ? 'on' : 'off');
-});
-
-artnet.attachChannel(2, (value) => {
-  debug('(ch2) small traffic light green: %d', value);
-  mqtt.publish('bus/devices/traffic-light/green', (value > 128) ? 'on' : 'off');
-});
+artnet.attachChannel(1, (value) => binaryOutputReducer(1, value, 'bus/devices/traffic-light/red'));
+artnet.attachChannel(2, (value) => binaryOutputReducer(2, value, 'bus/devices/traffic-light/green'));
 
 /**
  * 3-5 Big traffic light
@@ -39,25 +40,15 @@ artnet.attachChannel(2, (value) => {
  * CH4 - YELLOW
  * CH5 - GREEN
  */
-artnet.attachChannel(3, (value) => {
-  debug('(ch3) big traffic light red: %d', value);
-  mqtt.publish('modbus/endpointint/set/red_traffic', (value > 128) ? '1' : '0');
-});
+artnet.attachChannel(3, (value) => binaryOutputReducer(3, value, 'modbus/endpointint/set/red_traffic', '1', '0'));
+artnet.attachChannel(4, (value) => binaryOutputReducer(4, value, 'modbus/endpointint/set/yellow_traffic', '1', '0'));
+artnet.attachChannel(5, (value) => binaryOutputReducer(5, value, 'modbus/endpointint/set/green_traffic', '1', '0'));
 
-artnet.attachChannel(4, (value) => {
-  debug('(ch4) big traffic light yellow: %d', value);
-  mqtt.publish('modbus/endpointint/set/yellow_traffic', (value > 128) ? '1' : '0');
-});
-
-artnet.attachChannel(5, (value) => {
-  debug('(ch5) big traffic light green: %d', value);
-  mqtt.publish('modbus/endpointint/set/green_traffic', (value > 128) ? '1' : '0');
-});
-
-artnet.attachChannel(6, (value) => {
-  debug('(ch6) red space light: %d', value);
-  mqtt.publish('modbus/endpointint/set/red_space_light', (value > 128) ? '1' : '0');
-});
+/**
+ * Red lamp over the table
+ * CH6 – On/off (0...128 Off / 129...255 On)
+ */
+artnet.attachChannel(6, (value) => binaryOutputReducer(6, value, 'modbus/endpointint/set/red_space_light', '1', '0'));
 
 /**
  * Color changer disco ball
