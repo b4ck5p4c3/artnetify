@@ -70,14 +70,14 @@ artnet.attachChannel(6, (value) => {
  * CH12 - Auto-mode (Fade: 0-250, Sound: 251-255)
  * CH13 - Auto-mode speed
  */
-artnet.attachChannel(7, (value) => mqtt.publish('bus/dmx/0/1', value));
-artnet.attachChannel(8, (value) => mqtt.publish('bus/dmx/0/2', value));
-artnet.attachChannel(9, (value) => mqtt.publish('bus/dmx/0/3', value));
-artnet.attachChannel(10, (value) => mqtt.publish('bus/dmx/0/4', value));
-artnet.attachChannel(11, (value) => mqtt.publish('bus/dmx/0/5', value));
-artnet.attachChannel(12, (value) => mqtt.publish('bus/dmx/0/6', value));
-artnet.attachChannel(13, (value) => mqtt.publish('bus/dmx/0/7', value));
-artnet.attachChannel(14, (value) => mqtt.publish('bus/dmx/0/8', value));
+artnet.attachChannel(7, (value) => mqtt.publish('bus/dmx/0/1', String(value)));
+artnet.attachChannel(8, (value) => mqtt.publish('bus/dmx/0/2', String(value)));
+artnet.attachChannel(9, (value) => mqtt.publish('bus/dmx/0/3', String(value)));
+artnet.attachChannel(10, (value) => mqtt.publish('bus/dmx/0/4', String(value)));
+artnet.attachChannel(11, (value) => mqtt.publish('bus/dmx/0/5', String(value)));
+artnet.attachChannel(12, (value) => mqtt.publish('bus/dmx/0/6', String(value)));
+artnet.attachChannel(13, (value) => mqtt.publish('bus/dmx/0/7', String(value)));
+artnet.attachChannel(14, (value) => mqtt.publish('bus/dmx/0/8', String(value)));
 
 /**
  * Color changer scene/ceiling
@@ -90,11 +90,11 @@ artnet.attachChannel(14, (value) => mqtt.publish('bus/dmx/0/8', value));
  * CH20 - Auto-mode (Fade: 0-250, Sound: 251-255)
  * CH21 - Auto-mode speed
  */
-artnet.attachChannel(15, (value) => mqtt.publish('bus/dmx/0/9', value));
-artnet.attachChannel(16, (value) => mqtt.publish('bus/dmx/0/10', value));
-artnet.attachChannel(17, (value) => mqtt.publish('bus/dmx/0/11', value));
-artnet.attachChannel(18, (value) => mqtt.publish('bus/dmx/0/12', value));
-artnet.attachChannel(19, (value) => mqtt.publish('bus/dmx/0/13', value));
-artnet.attachChannel(20, (value) => mqtt.publish('bus/dmx/0/14', value));
-artnet.attachChannel(21, (value) => mqtt.publish('bus/dmx/0/15', value));
-artnet.attachChannel(22, (value) => mqtt.publish('bus/dmx/0/16', value));
+artnet.attachChannel(15, (value) => mqtt.publish('bus/dmx/0/9', String(value)));
+artnet.attachChannel(16, (value) => mqtt.publish('bus/dmx/0/10', String(value)));
+artnet.attachChannel(17, (value) => mqtt.publish('bus/dmx/0/11', String(value)));
+artnet.attachChannel(18, (value) => mqtt.publish('bus/dmx/0/12', String(value)));
+artnet.attachChannel(19, (value) => mqtt.publish('bus/dmx/0/13', String(value)));
+artnet.attachChannel(20, (value) => mqtt.publish('bus/dmx/0/14', String(value)));
+artnet.attachChannel(21, (value) => mqtt.publish('bus/dmx/0/15', String(value)));
+artnet.attachChannel(22, (value) => mqtt.publish('bus/dmx/0/16', String(value)));
