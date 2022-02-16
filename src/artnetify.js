@@ -1,12 +1,11 @@
 const dmxlib = require('dmxnet');
 
 class Artnetify {
-
   constructor(universe = 0, net = 0, subnet = 0, options = {}) {
-
     this.channelsHandlers = new Map();
     this.lastChannelsValues = new Map();
 
+    // eslint-disable-next-line new-cap
     this.dmxnet = new dmxlib.dmxnet({
       log: { level: 'error' },
       oem: options.oem || 0,
@@ -14,35 +13,25 @@ class Artnetify {
       lName: options.descritpion || 'Freakingly cool ArtNet proxy',
     });
 
-    this.dmxReceiver = this.dmxnet.newReceiver({ universe: universe, net, subnet });
+    this.dmxReceiver = this.dmxnet.newReceiver({ universe, net, subnet });
 
-    this.dmxReceiver.on('data', data => {
-
+    this.dmxReceiver.on('data', (data) => {
       data.forEach((value, channel) => {
-
         // Debounce values unless disabled
-        if (!options.disableDebounce && this.lastChannelsValues.get(channel) === value)
-          return;
+        if (!options.disableDebounce && this.lastChannelsValues.get(channel) === value) { return; }
 
         this.lastChannelsValues.set(channel, value);
-        this.channelsHandlers.get(channel)?.map(handler => handler(value));
-
-      })
-
+        this.channelsHandlers.get(channel)?.map((handler) => handler(value));
+      });
     });
-
   }
 
   attachChannel(ch, callback) {
-
     const channel = ch - 1;
-    if (!this.channelsHandlers.has(channel))
-      this.channelsHandlers.set(channel, []);
+    if (!this.channelsHandlers.has(channel)) { this.channelsHandlers.set(channel, []); }
 
     this.channelsHandlers.get(channel).push(callback);
-
   }
-
 }
 
 module.exports = Artnetify;
