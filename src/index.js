@@ -1,11 +1,18 @@
 require('dotenv').config();
 
-const MQTT = require('mqtt')
+const fs = require('fs');
+const path = require('path');
+const MQTT = require('mqtt');
 const Artnetify = require('./artnetify');
 const debug = require('debug')('artnetify');
 
 const artnet = new Artnetify();
-const mqtt  = MQTT.connect(process.env.MQTT_URI);
+
+const mqttOptions = {};
+if (process.env.MQTT_CA_PATH)
+  mqttOptions.ca = fs.readFileSync(path.resolve(__dirname, process.env.MQTT_CA_PATH));
+
+const mqtt  = MQTT.connect(process.env.MQTT_URI, mqttOptions);
 
 mqtt.on('connect', () => debug('mqtt connected'));
 mqtt.on('error', err => debug('mqtt failed: %O', err));
